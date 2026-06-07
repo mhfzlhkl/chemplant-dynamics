@@ -1,0 +1,69 @@
+# .github/workflows/deploy_pages.yml
+#
+# Build the static home page (``docs/index.html``) and publish
+# it to GitHub Pages on every push to ``main``.
+#
+# The NiceGUI backend itself stays on NiceGUI's on_air tunnel
+# (``ON_AIR_TOKEN``) or a self-hosted Docker target — neither
+# is part of this workflow. GitHub Pages only hosts the static
+# landing page; the live control panel is linked from there
+# via the ``ON_AIR_PROD_URL`` repo variable.
+
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install minimal deps for export
+        # We only need the assets.py / config.py / home_page.py
+        # modules for the static export — full engine deps
+        # (numpy, scipy, control, drawsvg, …) are NOT required
+        # because the exporter monkey-patches the NiceGUI ui
+        # module. We do need ``nicegui`` for the import to
+        # succeed and the patched attributes to be recognised.
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install nicegui
+
+      - name: Render static home page
+        env:
+          ON_AIR_PROD_URL: ${{ vars.ON_AIR_PROD_URL }}
+        run: |
+          python -m tools.export_static
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

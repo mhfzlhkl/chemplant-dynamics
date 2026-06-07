@@ -1,0 +1,147 @@
+# ─────────────────────────────────────────────────────────────
+# ChemPlant Dynamics — build & push the container to GHCR
+# ─────────────────────────────────────────────────────────────
+#
+# Triggers:
+#
+#   * push to main / master        → tag the image as :main
+#                                    and immutable :sha-<short>
+#   * push of a semver tag vX.Y.Z  → tag the image as
+#                                    :X.Y.Z, :X.Y, :X, :latest
+#   * pull_request                  → dry-run build (no push),
+#                                    to catch Dockerfile regressions
+#   * workflow_dispatch            → manual build/push for ad-hoc
+#                                    testing
+#
+# The workflow uses the recommended pattern for GitHub-Hosted
+# Runners + GHCR:
+#
+#   1. actions/checkout — full history so we can derive a
+#      short SHA tag
+#   2. docker/setup-qemu-action + docker/setup-buildx-action —
+#      multi-arch build (amd64 + arm64) so Fly.io / Render
+#      users on Apple Silicon can pull the same image
+#   3. docker/login-action — authenticates against GHCR with
+#      the workflow's GITHUB_TOKEN (no PAT needed, just the
+#      `packages: write` permission below)
+#   4. docker/metadata-action — derives the tag list from
+#      git refs (latest, semver, sha-…, main, etc.)
+#   5. docker/build-push-action — actually builds & pushes
+#
+# The image ends up at:
+#   ghcr.io/<owner>/<repo>:<tag>
+#
+# Anyone with read access to the repo can pull :latest. Mark
+# the package private in the GHCR settings if you don't want
+# the world to see it.
+
+name: docker-publish
+
+on:
+  push:
+    branches: [main, master]
+    tags: ['v*.*.*']
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+# The minimum set of permissions the workflow needs. GHCR
+# pushes require `packages: write`; status checks on PRs need
+# `contents: read`.
+permissions:
+  contents: read
+  packages: write
+
+# Cancel any in-flight run of this same workflow on the same
+# branch / tag when a new commit is pushed. Saves runner
+# minutes during a flurry of small commits.
+concurrency:
+  group: docker-publish-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build:
+    name: build & push
+    runs-on: ubuntu-latest
+
+    # Don't bother building for forks or on PRs from forks
+    # (the GITHUB_TOKEN can't push to GHCR from a fork run
+    # anyway). Local PRs against the repo's own branches
+    # still build — they're useful as a "does the Dockerfile
+    # compile" gate.
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Full history is needed for docker/metadata-action to
+          # read semver tags correctly.
+          fetch-depth: 0
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          # Push :latest only on the default branch, not on
+          # semver tags. Semver tags get their own immutable
+          # version labels.
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha,prefix=sha-
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build (and push) the image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          # Build-time args the Dockerfile's `ARG` lines read.
+          # The resulting env vars are what /healthz reports
+          # when you `curl` the running container.
+          build-args: |
+            BUILD_TIME=${{ github.event.repository.updated_at || github.run_id }}
+            GIT_SHA=${{ github.sha }}
+          # `push: ${{ github.event_name != 'pull_request' }}`
+          # means PRs only build (no push); everything else
+          # builds and pushes.
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          # BuildKit cache — pushes intermediate layers to
+          # ghcr.io/.../cache, keyed by branch, so the next
+          # run on the same branch only rebuilds the layers
+          # that actually changed. Cuts build time from ~6
+          # min (cold) to ~30 s (warm).
+          cache-from: type=gha,scope=${{ github.ref_name }}
+          cache-to: type=gha,scope=${{ github.ref_name }},mode=max
+          # Multi-arch. Apple-Silicon (M1/M2/M3) hosts on
+          # Fly.io / Render can pull the arm64 variant
+          # natively; x86_64 hosts pull the amd64 variant.
+          platforms: linux/amd64,linux/arm64
+          # Provenance + SBOM are GitHub's default for public
+          # packages; not strictly needed for a private
+          # research demo but free to generate.
+          provenance: false
+          sbom: false

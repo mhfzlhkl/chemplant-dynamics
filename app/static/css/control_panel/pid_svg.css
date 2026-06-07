@@ -1,0 +1,97 @@
+/* ui_root/static/css/control_panel/pid_svg.css */
+
+@layer pages {
+
+    /* =========================================================
+       STHR PID SVG
+       ========================================================= */
+
+    .sthr-pid-svg {
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        min-width: 0;
+
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        background-color: transparent !important;
+
+        /* Keep SVG visible; allow horizontal scroll on parent viewport. */
+        overflow: visible;
+    }
+
+    .sthr-pid-svg svg {
+        /* Natural 1001×540.225 viewBox; let SVG scale to fit its container
+           while preserving aspect ratio (no clipping, no stretching). */
+        display: block;
+
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 100%;
+
+        margin: 0 auto !important;
+        padding: 0 !important;
+
+        background-color: transparent !important;
+
+        /* Inline preserveAspectRatio ensures the SVG uniformly scales
+           inside its container. Matches the V1.1 reference behavior. */
+        preserveAspectRatio: xMidYMid meet;
+    }
+
+    /* =========================================================
+       BIODIESEL PID SVG
+
+       Identical layout rules to .sthr-pid-svg. The biodiesel
+       viewBox is 1343×805 (vs STHR's 1001×540.225) so the rendered
+       drawing is naturally slightly taller, but the SVG itself
+       fills the same container width and grows its height to
+       maintain the aspect ratio — so the cards render at the
+       same per-container size as STHR's.
+       ========================================================= */
+
+    .biodiesel-pid-svg {
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+        min-width: 0;
+
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        background-color: transparent !important;
+
+        /* Keep SVG visible; allow horizontal scroll on parent viewport. */
+        overflow: visible;
+    }
+
+    .biodiesel-pid-svg svg {
+        /* Natural 1343×805 viewBox; let SVG scale to fit its container
+           while preserving aspect ratio (no clipping, no stretching). */
+        display: block;
+
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 100%;
+
+        margin: 0 auto !important;
+        padding: 0 !important;
+
+        background-color: transparent !important;
+
+        /* Inline preserveAspectRatio ensures the SVG uniformly scales
+           inside its container. Matches the V1.1 reference behavior. */
+        preserveAspectRatio: xMidYMid meet;
+    }
+}

@@ -1,0 +1,50 @@
+{
+  "phases": [
+    {
+      "mode": "Automatic",
+      "duration": 0.5,
+      "duration_unit": "minutes",
+      "external_inputs": {
+        "TSP-100.SP": 150.0,
+        "TC-100.Kc": 6.1,
+        "TC-100.tauI": 2.3,
+        "TC-100.tauD": 0.58,
+        "STHR.F": 15.0,
+        "STHR.Ti": 100.0
+      }
+    },
+    {
+      "mode": "Manual",
+      "duration": 0.5,
+      "duration_unit": "minutes",
+      "external_inputs": {
+        "TV-100.M": 82.3,
+        "STHR.F": 15.0,
+        "STHR.Ti": 100.0
+      }
+    },
+    {
+      "mode": "Off",
+      "duration": 0.5,
+      "duration_unit": "minutes",
+      "external_inputs": {
+        "STHR.W": 42.2,
+        "STHR.F": 15.0,
+        "STHR.Ti": 100.0
+      }
+    },
+    {
+      "mode": "Automatic",
+      "duration": 0.5,
+      "duration_unit": "minutes",
+      "external_inputs": {
+        "TSP-100.SP": 160.0,
+        "TC-100.Kc": 6.1,
+        "TC-100.tauI": 2.3,
+        "TC-100.tauD": 0.58,
+        "STHR.F": 15.0,
+        "STHR.Ti": 100.0
+      }
+    }
+  ]
+}

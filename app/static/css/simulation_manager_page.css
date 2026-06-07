@@ -1,0 +1,1371 @@
+/* ui_root/static/css/simulation_manager_page.css */
+
+@layer pages {
+
+    /* =========================================================
+       PAGE ROOT
+       ========================================================= */
+
+    body.simulation-manager-page,
+    body.simulation-manager-page #app,
+    body.simulation-manager-page .nicegui-content,
+    body.simulation-manager-page .q-layout,
+    body.simulation-manager-page .q-page-container,
+    body.simulation-manager-page .q-page {
+        width: 100% !important;
+        min-width: var(--min-viewport-width);
+
+        height: 100% !important;
+        min-height: 100% !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        background-color: var(--bg-main) !important;
+        color: var(--text-main);
+
+        overflow: hidden !important;
+    }
+
+    .simulation-manager-page-root {
+        width: 100%;
+        height: 100vh;
+        min-height: 100vh;
+
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+
+        margin: 0 !important;
+        padding: 1rem !important;
+
+        background-color: var(--bg-main);
+        color: var(--text-main);
+
+        font-family: var(--font-control-ui);
+    }
+
+
+    /* Full-window variant: stretch content to fill child window */
+    .simulation-manager-page-root-full {
+        align-items: stretch !important;
+        justify-content: flex-start !important;
+        padding: 0 !important;
+        gap: 0 !important;
+        overflow: hidden !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+
+    /* =========================================================
+       CARD
+       ========================================================= */
+
+    .simulation-manager-page-card {
+        width: min(
+            var(--simulation-manager-page-card-w, 720px),
+            calc(100vw - 2rem)
+        );
+
+        max-height: calc(100vh - 2rem);
+
+        display: flex !important;
+        flex-direction: column;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        background-color: #050505;
+        color: #ffffff;
+
+        border: 1px solid rgba(255, 255, 255, 0.85);
+        border-radius: 8px;
+
+        overflow: hidden;
+
+        box-shadow:
+            0 18px 42px rgba(0, 0, 0, 0.55),
+            0 0 0 1px rgba(255, 255, 255, 0.025);
+    }
+
+
+    /* =========================================================
+       HEADER
+       ========================================================= */
+
+    .simulation-manager-page-header {
+        width: 100%;
+
+        min-height: 34px;
+
+        padding: 4px 10px !important;
+
+        background:
+            linear-gradient(180deg, rgba(255, 214, 0, 0.08), rgba(255, 214, 0, 0.0)),
+            rgba(255, 255, 255, 0.025) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.20);
+    }
+
+    .simulation-manager-page-title-block {
+        min-width: 0;
+
+        gap: 0 !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .simulation-manager-page-title {
+        color: var(--text-highlight, #ffd600);
+
+        font-family: var(--font-mono, "Courier Prime", monospace);
+        font-size: 0.95rem;
+        font-weight: 700;
+
+        letter-spacing: 0.06em;
+        line-height: 1;
+    }
+
+    .simulation-manager-page-process-label {
+        color: var(--text-muted, #bdbdbd);
+
+        font-family: var(--font-control-ui);
+        font-size: 0.62rem;
+        font-weight: 600;
+
+        letter-spacing: 0.04em;
+        line-height: 1;
+        text-transform: uppercase;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .simulation-manager-page-close-btn {
+        color: var(--text-muted) !important;
+    }
+
+    .simulation-manager-page-close-btn:hover {
+        color: var(--text-white) !important;
+        background-color: rgba(255, 255, 255, 0.06) !important;
+    }
+
+
+    /* =========================================================
+       FORM
+       ========================================================= */
+
+    .simulation-manager-page-form {
+        width: 100%;
+
+        display: flex !important;
+        flex-direction: column;
+
+        gap: 6px !important;
+
+        margin: 0 !important;
+        padding: 4px 6px !important;
+
+        overflow-y: auto;
+    }
+
+    .simulation-manager-page-input {
+        width: 100%;
+    }
+
+    /* Input chrome — mirrors .tic-param-value / .faceplate-input-field
+       exactly: 24 px tall, rgba(27,27,27,0.94) bg, 4 px radius, no
+       border, centered monospace text. */
+    .simulation-manager-page-input .q-field__control {
+        height: 24px !important;
+        min-height: 24px !important;
+
+        background-color: rgba(27, 27, 27, 0.94) !important;
+        border: 0 !important;
+        border-radius: 4px !important;
+
+        padding: 0 4px !important;
+        box-shadow: none !important;
+    }
+
+    .simulation-manager-page-input .q-field__control-container {
+        height: 24px !important;
+        min-height: 24px !important;
+        line-height: 24px !important;
+        padding: 0 !important;
+    }
+
+    .simulation-manager-page-input .q-field__native,
+    .simulation-manager-page-input .q-field__input,
+    .simulation-manager-page-input .q-field__append {
+        height: 24px !important;
+        min-height: 24px !important;
+        line-height: 24px !important;
+
+        color: #ffffff !important;
+        font-family: var(--font-control-ui) !important;
+        font-size: 0.7rem !important;
+        text-align: center !important;
+    }
+
+    .simulation-manager-page-input .q-field__label,
+    .simulation-manager-page-input .q-field__bottom {
+        display: none !important;
+    }
+
+
+    /* =========================================================
+       ACTIONS
+       ========================================================= */
+
+    .simulation-manager-page-actions {
+        width: 100%;
+
+        margin: 0 !important;
+        padding: 0.75rem 1rem 1rem 1rem !important;
+
+        border-top: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .simulation-manager-page-apply-btn {
+        color: var(--text-highlight) !important;
+        font-weight: 700 !important;
+    }
+
+
+    /* =========================================================
+       FLOATING DIALOG (mounted on the control-panel page)
+       ---------------------------------------------------------
+       The Runtime Manager card is also rendered as a draggable
+       dialog that floats above the dashboard. The styles below
+       override the centered-page card chrome so the card becomes
+       a fixed-position panel, and make the header row behave as
+       a drag handle (cursor + user-select).
+       ========================================================= */
+
+    body .floating-runtime-manager-card {
+        /* Quasar-recommended positioning. The card is the
+           direct child of ``.q-dialog__inner`` (Quasar's
+           own div), which is itself ``position: fixed;
+           inset: 0; display: flex; justify-content: center;
+           align-items: center;`` — the
+           ``positionClass: 'fixed-full flex-center'`` pattern
+           from Quasar's ``QDialog.js``. The card has
+           ``position: absolute`` (no other positioning), so
+           the inner's flex layout centers it in the viewport
+           automatically.
+
+           The drag handler sets inline ``left``/``top`` on
+           the card during a drag, which positions the card
+           absolutely relative to the inner's ``position:
+           fixed`` containing block (= the viewport). To
+           re-center on the next open we just clear the
+           inline ``left``/``top`` and the flex layout
+           takes over again — no JS math, no race with
+           Quasar's show-transition, no
+           ``getBoundingClientRect`` measurement.
+
+           ``--frm-drawer-offset`` (default 0) shifts the
+           center to the content area when the drawer is
+           open. */
+        position: absolute !important;
+        margin-left: var(--frm-drawer-offset, 0px) !important;
+
+        /* User-resizable defaults — width / max-height are read from
+           CSS custom-properties so the JS multi-edge resize handler
+           in ``app/components/floating_runtime_manager.py`` can
+           persist the user's drag of any resize handle to
+           ``sessionStorage`` and replay it on the next open. The
+           defaults below match the original fixed values so a fresh
+           session looks identical to the pre-resize build. */
+        width: var(--frm-width, min(720px, calc(100vw - 2rem))) !important;
+        height: var(--frm-height, auto) !important;
+        max-height: calc(100vh - 1rem) !important;
+
+        /* Floors / ceilings for the user-drag. The min-* values
+           keep the card large enough to remain usable even when
+           the user drags the resize handle inward; the max-*
+           values keep it inside the viewport. */
+        min-width: 360px;
+        min-height: 220px;
+        max-width: calc(100vw - 1rem);
+
+        /* NOTE: we deliberately do NOT use ``resize: both`` here.
+           That CSS property only gives a single grip in the
+           bottom-right corner and (because the grip is rendered as
+           an overlay inside the element) it eats pointer events on
+            any UI that happens to be near the corner — including
+            our window buttons when the dialog is small. We mount
+            our own 8-direction resize handles in JS instead (4
+            edges + 4 corners) so the user can grab any side and
+            the buttons stay click-through.
+
+            ``overflow: visible`` is required so the absolutely-
+            positioned resize handles (which sit 4 px outside the
+            card bounding box on N/E/S/W edges) are not clipped.
+            The inner ``.simulation-manager-page-form`` keeps its
+            own ``overflow-y: auto`` so content scrollbars stay
+            contained inside the rounded corners. */
+        overflow: visible;
+
+        z-index: 1000;
+
+        box-shadow: 0 18px 42px rgba(0, 0, 0, 0.55) !important;
+    }
+
+    /* The Quasar-recommended centering path. Quasar's
+       ``.q-dialog__inner`` is already ``position: fixed;
+       inset: 0; display: flex; justify-content: center;
+       align-items: center;`` (see Quasar's QDialog.js
+       positionClass ``fixed-full flex-center``). We rely
+       on that flex centering to keep the card centered in
+       the viewport. The card itself has no own
+       positioning (only ``position: absolute``) so the
+       flex layout centers it.
+
+       On some Quasar versions the card itself receives
+       the ``q-dialog__inner`` class. We keep the flex
+       display + centering on the inner in both cases. */
+    body .floating-runtime-manager-card.q-dialog__inner,
+    .q-dialog__inner:has(> .floating-runtime-manager-card) {
+        /* Keep the flex centering. */
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        min-height: 0 !important;
+        transform: none !important;
+        padding: 0 !important;
+    }
+
+    body .floating-runtime-manager-card
+        .simulation-manager-page-header {
+        cursor: grab;
+        touch-action: none;
+    }
+
+    body .floating-runtime-manager-card
+        .simulation-manager-page-header:active {
+        cursor: grabbing;
+    }
+
+
+    /* =========================================================
+       DCS/HMI FACEPLATE STYLING
+       ---------------------------------------------------------
+       Re-skin the page body so the Runtime Manager reads like a
+       real Distributed Control System (DCS) faceplate, while
+       staying consistent with the rest of the ChemPlant app:
+
+       - Header gets a tag-strip with the controller tag on the
+         left and a colored mode-quality pill on the right.
+       - Body becomes a grid of sections, each with a section
+         header (uppercase, monospace, dim) and a horizontal
+         "lane" of field groups underneath.
+       - Fields become compact faceplate rows: small label on top,
+         digital readout / input below, unit suffix at the right.
+       - Status row across the bottom mirrors a DCS summary bar.
+
+       Color/font choices map back to the rest of the app:
+       - Title 15px Courier Prime (matches controller modal title)
+       - Field body 0.7rem Courier Prime (matches tic-param-value)
+       - Section title 0.66rem amber #ffd54f (matches tic-param-section-title)
+       - Field-control bg #1b1b1b / border rgba(255,255,255,0.14)
+         (matches tic-param-value .q-field__control)
+       - Mode pill faceplate auto=#4caf50 / manual=#ffb300 / off=#9e9e9e
+         (matches .faceplate-status-auto / -manual / -off)
+       ========================================================= */
+
+    /* Force the form to be a clean vertical stack of sections
+       with no extra row gap (the section card supplies its own). */
+    .simulation-manager-page-form {
+        gap: 6px !important;
+        padding: 4px 6px !important;
+    }
+
+    .simulation-manager-page-form > .row {
+        /* Strip the row gap that the v1 page used to lay out the
+           fields. The section card provides visual separation. */
+        gap: 0 !important;
+    }
+
+
+    /* ── Section card — mirrors .faceplate-section (flat
+       rgba(0,0,0,0.18) bg, hair border, 5px radius). */
+    .sim-manager-section {
+        width: 100%;
+
+        display: flex !important;
+        flex-direction: column;
+
+        gap: 4px !important;
+
+        margin: 0 !important;
+        padding: 6px 8px !important;
+
+        background-color: rgba(0, 0, 0, 0.18) !important;
+        border: 1px solid rgba(255, 255, 255, 0.06) !important;
+        border-radius: 5px !important;
+
+        box-shadow: none !important;
+    }
+
+    .sim-manager-section + .sim-manager-section {
+        margin-top: 0 !important;
+    }
+
+    .sim-manager-section-header {
+        width: 100%;
+
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 6px !important;
+
+        margin: 0 0 2px 0 !important;
+        padding: 0 !important;
+
+        color: var(--text-highlight, #ffd54f);
+        background-color: transparent;
+
+        border-bottom: 1px solid var(--hmi-border);
+
+        font-family: var(--font-control-ui);
+        font-size: 0.66rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        line-height: 1;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .sim-manager-section-title {
+        color: var(--text-highlight, #ffd54f);
+        background-color: transparent;
+
+        font-family: var(--font-control-ui);
+        font-size: 0.66rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .sim-manager-section-hint {
+        color: var(--text-muted, #bdbdbd);
+        background-color: transparent;
+
+        font-family: var(--font-control-ui);
+        font-size: 0.62rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        opacity: 0.85;
+    }
+
+    .sim-manager-section-body {
+        width: 100%;
+
+        display: grid !important;
+        grid-template-columns: repeat(12, minmax(0, 1fr));
+        gap: 8px !important;
+
+        margin: 0 !important;
+        padding: 2px 0 0 0 !important;
+    }
+
+
+    /* ── Action row (Continue / Stop) ──
+       The action row is rendered by ``runtime_manager_page.py`` when
+       the host supplies ``on_run``/``on_stop`` callbacks (i.e. the
+       floating dialog mounted from the control-panel page). We
+       override ``display: grid`` from the generic
+       ``.sim-manager-section-body`` so the two buttons sit on one
+       flexible row regardless of viewport width. */
+    .sim-manager-actions-row {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap;
+
+        gap: 10px !important;
+
+        align-items: stretch;
+        justify-content: flex-start;
+
+        grid-template-columns: none !important;
+    }
+
+    /* Compact DCS-style faceplate button. Color hooks mirror the
+       PID navbar Run/Stop (green for run/continue, red for stop) so
+       the dialog buttons read as the same affordance the navbar
+       offers — operators don't have to learn two color systems. */
+    .sim-manager-action-btn {
+        min-width: 110px;
+
+        height: 32px !important;
+        min-height: 32px !important;
+
+        padding: 0 14px !important;
+
+        font-family: var(--font-control-ui) !important;
+        font-size: 0.78rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.06em !important;
+
+        background-color: rgba(255, 255, 255, 0.04) !important;
+        border: 1px solid rgba(255, 255, 255, 0.20) !important;
+        border-radius: 4px !important;
+
+        box-shadow: none !important;
+    }
+
+    .sim-manager-action-btn .q-icon {
+        margin-right: 4px;
+    }
+
+    /* Continue / Run button — matches the controller modal
+       action-button family: amber outline, transparent fill,
+       amber hover wash. */
+    .sim-manager-action-btn-run {
+        color: var(--text-highlight, #ffd54f) !important;
+    }
+    .sim-manager-action-btn-run:hover {
+        background-color: rgba(255, 214, 0, 0.14) !important;
+        border-color: rgba(255, 214, 0, 0.90) !important;
+    }
+
+    .sim-manager-action-btn-stop {
+        color: #ff5252 !important;
+    }
+    .sim-manager-action-btn-stop:hover {
+        background-color: rgba(255, 82, 82, 0.10) !important;
+        border-color: rgba(255, 82, 82, 0.55) !important;
+    }
+
+    /* Disabled state — used by the dialog action-row sync so the
+       Continue button mirrors the navbar Run button's enabled /
+       disabled state from ``set_run_button_disabled``. */
+    .sim-manager-action-btn[disabled],
+    .sim-manager-action-btn-disabled {
+        color: rgba(255, 255, 255, 0.35) !important;
+        opacity: 0.5 !important;
+        cursor: not-allowed !important;
+        background-color: transparent !important;
+        border-color: rgba(255, 255, 255, 0.10) !important;
+    }
+    .sim-manager-action-btn[disabled]:hover,
+    .sim-manager-action-btn-disabled:hover {
+        background-color: transparent !important;
+    }
+
+
+    /* ── Faceplate field ── */
+    .sim-manager-field {
+        grid-column: span 4 / span 4;
+        min-width: 0;
+
+        display: flex !important;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+
+        gap: 2px !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .sim-manager-field-wide {
+        grid-column: span 6 / span 6;
+    }
+
+    .sim-manager-field-full {
+        grid-column: span 12 / span 12;
+    }
+
+    .sim-manager-field-label {
+        height: 14px;
+
+        color: #ffffff;
+        background-color: transparent;
+
+        font-family: var(--font-control-ui);
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        line-height: 1;
+        text-transform: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .sim-manager-field-row {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: stretch;
+        gap: 4px !important;
+    }
+
+    .sim-manager-field-row .q-field {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .sim-manager-field-unit {
+        flex: 0 0 auto;
+
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: flex-start;
+
+        min-width: 38px;
+        max-width: 78px;
+        height: 24px;
+        padding: 0 4px 0 6px;
+
+        color: #bdbdbd;
+        background-color: transparent;
+        border: 0;
+        border-radius: 0;
+
+        font-family: var(--font-control-ui);
+        font-size: 0.62rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        line-height: 24px;
+        text-align: left;
+        text-transform: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+
+    /* ── Digital readout (display-only field) ── */
+    .sim-manager-readout {
+        height: 24px;
+        min-height: 24px;
+
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+
+        padding: 0 4px;
+
+        color: var(--text-highlight, #ffd54f);
+        background-color: rgba(27, 27, 27, 0.94);
+        border: 0;
+        border-radius: 4px;
+        box-shadow: none;
+
+        font-family: var(--font-control-ui);
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0;
+        line-height: 24px;
+        text-align: center;
+    }
+
+    .sim-manager-readout-sm {
+        height: 24px;
+        min-height: 24px;
+        font-size: 0.7rem;
+    }
+
+
+    /* ── Hero timer (large Current Time readout) ──
+       A bigger, monospace clock that lives at the top of the card,
+       between the header and the first section. Visually pairs with
+       the DCS faceplate: 28px tall, 18px Courier, amber accent on
+       the label, soft amber/green gradient backdrop. */
+    .sim-manager-timer {
+        width: 100%;
+
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 6px !important;
+
+        margin: 0 !important;
+        padding: 8px 12px !important;
+
+        background:
+            linear-gradient(
+                180deg,
+                rgba(255, 213, 79, 0.10) 0%,
+                rgba(27, 27, 27, 0.94) 100%
+            );
+        border-bottom: 1px solid var(--hmi-border);
+        border-radius: 0;
+    }
+
+    .sim-manager-timer-block {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 1px;
+
+        min-width: 0;
+    }
+
+    .sim-manager-timer-label {
+        color: var(--text-highlight, #ffd54f);
+        background-color: transparent;
+
+        font-family: var(--font-control-ui);
+        font-size: 0.66rem;
+        font-weight: 700;
+        letter-spacing: 0.10em;
+        line-height: 1.1;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .sim-manager-timer-value {
+        color: #ffffff;
+        background-color: transparent;
+
+        font-family: var(--font-control-ui);
+        font-size: 1.4rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        line-height: 1.1;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .sim-manager-timer-unit {
+        color: var(--text-highlight, #ffd54f);
+        background-color: transparent;
+
+        font-family: var(--font-control-ui);
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        line-height: 1.1;
+        text-transform: lowercase;
+    }
+
+
+    /* ── Status pill (mode-quality indicator) ──
+       Color semantics mirror the faceplate status dot:
+       - AUTO/CASCADE use faceplate green #4caf50 (with glow)
+       - MANUAL uses faceplate amber #ffb300 (with glow)
+       - OFF uses faceplate gray #9e9e9e
+       - IDLE is a blinking variant to signal "no live bridge"
+    */
+    .sim-manager-status-pill {
+        display: inline-flex !important;
+        align-items: center;
+        gap: 4px !important;
+
+        height: 22px;
+        min-height: 22px;
+        padding: 0 8px;
+
+        color: #ffffff;
+        background-color: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.20);
+        border-radius: 4px;
+
+        font-family: var(--font-control-ui);
+        font-size: 0.66rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        line-height: 1;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .sim-manager-status-pill::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: currentColor;
+        box-shadow: 0 0 4px currentColor;
+        flex: 0 0 auto;
+    }
+
+    .sim-manager-status-pill-mode-auto {
+        color: #4caf50;
+        background-color: rgba(76, 175, 80, 0.06);
+        border-color: rgba(76, 175, 80, 0.55);
+    }
+    .sim-manager-status-pill-mode-auto::before {
+        background: #4caf50;
+        box-shadow: 0 0 6px rgba(76, 175, 80, 0.55);
+    }
+    .sim-manager-status-pill-mode-manual {
+        color: #ffb300;
+        background-color: rgba(255, 179, 0, 0.06);
+        border-color: rgba(255, 179, 0, 0.55);
+    }
+    .sim-manager-status-pill-mode-manual::before {
+        background: #ffb300;
+        box-shadow: 0 0 6px rgba(255, 179, 0, 0.55);
+    }
+    .sim-manager-status-pill-mode-off {
+        color: #9e9e9e;
+        background-color: rgba(158, 158, 158, 0.04);
+        border-color: rgba(158, 158, 158, 0.40);
+    }
+    .sim-manager-status-pill-mode-off::before {
+        background: #9e9e9e;
+        box-shadow: 0 0 6px rgba(158, 158, 158, 0.45);
+    }
+    .sim-manager-status-pill-mode-cascade {
+        color: #ffb300;
+        background-color: rgba(255, 179, 0, 0.06);
+        border-color: rgba(255, 179, 0, 0.55);
+    }
+    .sim-manager-status-pill-mode-cascade::before {
+        background: #ffb300;
+        box-shadow: 0 0 6px rgba(255, 179, 0, 0.55);
+    }
+
+    .sim-manager-status-pill-idle {
+        color: var(--hmi-text-muted);
+        background-color: transparent;
+        border-color: rgba(255, 255, 255, 0.14);
+    }
+    .sim-manager-status-pill-idle::before {
+        animation: sim-manager-blink 1.6s ease-in-out infinite;
+    }
+
+    @keyframes sim-manager-blink {
+        0%, 100% { opacity: 0.4; }
+        50%      { opacity: 1; }
+    }
+
+
+    /* ── Tag chip (top-left of header) ── */
+    .sim-manager-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+
+        height: 22px;
+        padding: 0 6px;
+
+        color: var(--text-highlight, #ffd54f);
+        background-color: transparent;
+        border: 1px solid rgba(255, 214, 0, 0.55);
+        border-radius: 4px;
+
+        font-family: var(--font-control-ui);
+        font-size: 0.66rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        line-height: 1;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .sim-manager-tag-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--text-highlight, #ffd54f);
+        box-shadow: 0 0 6px rgba(255, 214, 0, 0.55);
+        flex: 0 0 auto;
+    }
+
+
+    /* ── Footer / status bar (DCS summary strip) ── */
+    .sim-manager-statusbar {
+        width: 100%;
+
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+
+        gap: 6px !important;
+
+        margin: 0 !important;
+        padding: 6px 8px !important;
+
+        color: var(--hmi-text-soft, #bdbdbd);
+        background-color: rgba(0, 0, 0, 0.30);
+        border-top: 1px solid rgba(255, 255, 255, 0.20);
+
+        font-family: var(--font-control-ui);
+        font-size: 0.62rem;
+        font-weight: 400;
+        letter-spacing: 0.04em;
+        line-height: 1;
+        text-transform: uppercase;
+    }
+
+    .sim-manager-statusbar-cell {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+
+        padding: 0;
+
+        background-color: transparent;
+        border: 0;
+        border-radius: 0;
+    }
+
+    .sim-manager-statusbar-cell-label {
+        color: var(--hmi-text-muted);
+    }
+
+    .sim-manager-statusbar-cell-value {
+        color: #ffffff;
+    }
+
+
+    /* ── Card backdrop — mirrors the faceplate right-drawer body
+       (flat var(--bg-panel), no gradient). The amber wash lives
+       on the header strip only, so the four surfaces share the
+       same single-source gradient strategy. */
+    .simulation-manager-page-card {
+        background-color: var(--bg-panel, #111722) !important;
+        color: #ffffff;
+    }
+
+    .simulation-manager-page-header {
+        background:
+            linear-gradient(180deg, rgba(255, 214, 0, 0.08), rgba(255, 214, 0, 0.0)),
+            rgba(255, 255, 255, 0.025) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.20) !important;
+    }
+
+    .simulation-manager-page-title {
+        color: var(--text-highlight, #ffd600) !important;
+        font-family: var(--font-mono, "Courier Prime", monospace) !important;
+        font-size: 0.95rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.06em !important;
+        line-height: 1 !important;
+    }
+
+    .simulation-manager-page-process-label {
+        color: var(--text-muted, #bdbdbd) !important;
+        font-family: var(--font-control-ui) !important;
+        font-size: 0.62rem !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.04em !important;
+        text-transform: uppercase !important;
+    }
+
+    /* ── Input field chrome — matches .tic-param-value /
+       .faceplate-input-field exactly: 24 px tall,
+       rgba(27,27,27,0.94) bg, 4 px radius, 0.7 rem centered
+       monospace text. */
+    .simulation-manager-page-input .q-field__control {
+        background-color: rgba(27, 27, 27, 0.94) !important;
+        border: 0 !important;
+        border-radius: 4px !important;
+        height: 24px !important;
+        min-height: 24px !important;
+        padding: 0 4px !important;
+        box-shadow: none !important;
+    }
+
+    .simulation-manager-page-input .q-field__control-container {
+        height: 24px !important;
+        min-height: 24px !important;
+        line-height: 24px !important;
+        padding: 0 !important;
+    }
+
+    .simulation-manager-page-input .q-field__native,
+    .simulation-manager-page-input .q-field__input,
+    .simulation-manager-page-input .q-field__append {
+        height: 24px !important;
+        min-height: 24px !important;
+        line-height: 24px !important;
+        color: #ffffff !important;
+        font-family: var(--font-control-ui) !important;
+        font-size: 0.7rem !important;
+        font-weight: 700 !important;
+        text-align: center !important;
+    }
+
+    .simulation-manager-page-input .q-field__label {
+        display: none !important;
+    }
+
+    .simulation-manager-page-input .q-field__bottom {
+        display: none !important;
+    }
+
+
+    /* ── Floating dialog specific: drag-handle visual hint ── */
+    body .floating-runtime-manager-card
+        .simulation-manager-page-header {
+        position: relative;
+    }
+
+    /* Subtle bottom-bar in the header that hints "this row is a
+       drag handle" — same low-contrast white the controller modal
+       uses for its separator. */
+    body .floating-runtime-manager-card
+        .simulation-manager-page-header::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        bottom: 2px;
+        transform: translateX(-50%);
+        width: 28px;
+        height: 2px;
+        background-color: rgba(255, 255, 255, 0.20);
+        border-radius: 1px;
+        pointer-events: none;
+    }
+
+    /* Snap-to-edge visual hint on the floating card (subtle amber
+       glow when card is dragged near a viewport edge). Amber matches
+       the brand accent used in the menu's active state and in the
+       controller modal's apply/faceplate buttons. */
+    body .floating-runtime-manager-card.sim-manager-snapped-left {
+        box-shadow:
+            -3px 0 0 0 var(--hmi-accent-amber),
+            0 18px 42px rgba(0, 0, 0, 0.45),
+            0 0 0 1px rgba(255, 213, 79, 0.20) !important;
+    }
+    body .floating-runtime-manager-card.sim-manager-snapped-right {
+        box-shadow:
+            3px 0 0 0 var(--hmi-accent-amber),
+            0 18px 42px rgba(0, 0, 0, 0.45),
+            0 0 0 1px rgba(255, 213, 79, 0.20) !important;
+    }
+    body .floating-runtime-manager-card.sim-manager-snapped-top {
+        box-shadow:
+            0 -3px 0 0 var(--hmi-accent-amber),
+            0 18px 42px rgba(0, 0, 0, 0.45),
+            0 0 0 1px rgba(255, 213, 79, 0.20) !important;
+    }
+
+
+    /* =========================================================
+       MULTI-EDGE RESIZE HANDLES
+       ---------------------------------------------------------
+       8 invisible handles mounted by JS (see
+       ``floating_runtime_manager.py:_resize_handles_script``) — 4
+       edges (top / right / bottom / left) and 4 corners. Each
+       handle is ``position: absolute`` so it doesn't displace
+       the card's normal layout, and uses ``pointer-events: auto``
+       to capture drag events even though the card itself sits
+       inside a dialog wrapper that may flip ``pointer-events:
+       none`` when minimized. The cursor hints match the native
+       browser hints (``ns-resize`` / ``ew-resize`` / corner
+       variants) so the user gets the same affordance they expect
+       from any resizable panel. */
+    .sim-manager-resize-handle {
+        position: absolute;
+        z-index: 1002;        /* Above buttons (1002) and card body. */
+        background: transparent;
+        pointer-events: auto;
+        touch-action: none;   /* Pointer-events drag, not browser pan. */
+    }
+
+    /* Edges — thin strips that protrude OUTSIDE the card edge so
+       they never overlap interactive children near the border
+       (e.g. minimize/close buttons in the header, scroll thumbs at
+       the side). 8 px of headroom at the ends keeps the corner
+       handles priority. */
+    .sim-manager-resize-handle-n {
+        top: -4px; left: 8px; right: 8px;
+        height: 4px;
+        cursor: ns-resize;
+    }
+    .sim-manager-resize-handle-s {
+        bottom: -4px; left: 8px; right: 8px;
+        height: 4px;
+        cursor: ns-resize;
+    }
+    .sim-manager-resize-handle-e {
+        right: -4px; top: 8px; bottom: 8px;
+        width: 4px;
+        cursor: ew-resize;
+    }
+    .sim-manager-resize-handle-w {
+        left: -4px; top: 8px; bottom: 8px;
+        width: 4px;
+        cursor: ew-resize;
+    }
+
+    /* Corners — 12 px squares overlapping the edge handles so
+       they win the pointer-down race when the user is on a
+       corner pixel. */
+    .sim-manager-resize-handle-ne {
+        top: -4px; right: -4px;
+        width: 12px; height: 12px;
+        cursor: nesw-resize;
+    }
+    .sim-manager-resize-handle-nw {
+        top: -4px; left: -4px;
+        width: 12px; height: 12px;
+        cursor: nwse-resize;
+    }
+    .sim-manager-resize-handle-se {
+        bottom: -4px; right: -4px;
+        width: 14px; height: 14px;
+        cursor: nwse-resize;
+        /* Subtle diagonal hatch in the bottom-right so users
+           who learned the browser-native ``resize: both`` grip
+           still see something they recognise. The hatch is the
+           same low-contrast white the drag-handle bar in the
+           header uses. */
+        background:
+            linear-gradient(
+                135deg,
+                transparent 0,
+                transparent 35%,
+                rgba(255, 255, 255, 0.25) 35%,
+                rgba(255, 255, 255, 0.25) 45%,
+                transparent 45%,
+                transparent 60%,
+                rgba(255, 255, 255, 0.25) 60%,
+                rgba(255, 255, 255, 0.25) 70%,
+                transparent 70%
+            );
+    }
+    .sim-manager-resize-handle-sw {
+        bottom: -4px; left: -4px;
+        width: 12px; height: 12px;
+        cursor: nesw-resize;
+    }
+
+
+    /* Minimize state (body hides everything but the header strip) */
+    body .floating-runtime-manager-card.sim-manager-minimized
+        .simulation-manager-page-form,
+    body .floating-runtime-manager-card.sim-manager-minimized
+        .sim-manager-statusbar {
+        display: none !important;
+    }
+    body .floating-runtime-manager-card.sim-manager-minimized {
+        max-height: none !important;
+        /* Collapse the user-controlled height so the strip is
+           exactly tall enough for the header + timer. Without
+           this, a previously-resized tall card stays tall (and
+           mostly empty) in the minimized state. The JS resize
+           handles read the class and skip dispatching during
+           minimized — see ``floating_runtime_manager.py``. */
+        height: auto !important;
+        /* Override the 220 px card min-height so the minimized
+           strip can shrink to its natural content size. */
+        min-height: 0 !important;
+    }
+
+    /* Hide the JS-mounted resize handles while minimized — they
+       belong to the full body, not the header-only strip. */
+    body .floating-runtime-manager-card.sim-manager-minimized
+        .sim-manager-resize-handle {
+        display: none !important;
+    }
+
+    /* When minimized, the hero ``.sim-manager-timer`` becomes the
+       LAST visible row in the card. Two fixups so the strip looks
+       like a finished panel instead of a card with a missing
+       bottom: (a) round the bottom-left / bottom-right corners to
+       match the card's 8px radius; (b) drop the bottom border that
+       normally separates the timer from the form below — without
+       this, the user sees a hanging hairline at the bottom of the
+       strip that reads as "something is hidden under here". */
+    body .floating-runtime-manager-card.sim-manager-minimized
+        .sim-manager-timer {
+        border-bottom: 0 !important;
+        border-bottom-left-radius: 8px !important;
+        border-bottom-right-radius: 8px !important;
+    }
+
+    /* =========================================================
+       PASS-THROUGH WHEN MINIMIZED
+       ---------------------------------------------------------
+       A NiceGUI ``ui.dialog`` mounts THREE layers above the page:
+
+           .q-dialog                    ← fixed full-viewport wrapper
+             .q-dialog__backdrop        ← dimmed scrim
+             .q-dialog__inner           ← flex centering wrapper
+               .floating-runtime-manager-card
+
+       In the normal (open / full-body) state, all three layers
+       intercept pointer events — that is the *correct* behaviour
+       for a modal dialog. In the minimized state we WANT the
+       opposite: the user should be able to keep interacting with
+       the underlying dashboard (PID, navbar, etc.) while the
+       Runtime Manager strip stays visible as a HUD-style "shelf"
+       at the centre of the viewport.
+
+       The trick is a two-step ``pointer-events`` flip:
+
+         1. Set ``pointer-events: none`` on the dialog wrapper,
+            backdrop, and inner so they let clicks straight through
+            to the page underneath.
+         2. Re-enable ``pointer-events: auto`` on the card itself
+            so its header drag-handle, minimize/close buttons, and
+            hero Current Time strip remain interactive.
+
+       We key the flip on the dialog wrapper having a descendant
+       with the ``.sim-manager-minimized`` class. ``:has()`` is
+       supported in every browser shipped with Chromium-based
+       Quasar/NiceGUI versions in current use (Chrome ≥105, Safari
+       ≥15.4, Firefox ≥121). The backdrop is also faded out so
+       the dimmed page doesn't read as "still modal".
+
+       Bonus: ``display: none`` on the backdrop in minimized
+       state — keeping it at ``pointer-events: none`` is enough
+       for behaviour, but hiding it completely removes the visible
+       dim and makes the underlying app feel fully live. */
+    .q-dialog:has(.floating-runtime-manager-card.sim-manager-minimized) {
+        pointer-events: none !important;
+    }
+    .q-dialog:has(.floating-runtime-manager-card.sim-manager-minimized)
+        .q-dialog__backdrop {
+        display: none !important;
+    }
+    .q-dialog:has(.floating-runtime-manager-card.sim-manager-minimized)
+        .q-dialog__inner {
+        pointer-events: none !important;
+        background: transparent !important;
+    }
+    body .floating-runtime-manager-card.sim-manager-minimized {
+        pointer-events: auto !important;
+    }
+
+    /* Cursor hint: ``.simulation-manager-page-header`` carries
+       ``cursor: grab`` for the drag handle, which is correct over
+       the title block / mode pill, but reads as "this whole row is
+       inert" over the buttons. Reassert ``cursor: pointer`` on the
+       window buttons so the minimize/close affordance feels live
+       — the buttons are already excluded from drag-capture via
+       ``shouldSkipDrag`` (see floating_runtime_manager.py:443-452),
+       this just brings the visual hint in line with the behaviour. */
+    body .floating-runtime-manager-card
+        .simulation-manager-page-header
+        .sim-manager-window-btn {
+        cursor: pointer !important;
+    }
+    body .floating-runtime-manager-card
+        .simulation-manager-page-header
+        .sim-manager-status-pill {
+        cursor: default;
+    }
+
+
+    /* ── Minimize/maximize buttons in header ── */
+    .sim-manager-window-btn {
+        color: #ffffff !important;
+        background-color: transparent !important;
+
+        width: 28px !important;
+        min-width: 28px !important;
+        height: 28px !important;
+        min-height: 28px !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+
+        /* Defensive: keep the minimize / close buttons above any
+           resize handle that might overlap the header edge. The
+           resize handles use z-index: 1002; bump these to 1003
+           so the user's click on the button always wins. */
+        position: relative;
+        z-index: 1003;
+    }
+
+    .sim-manager-window-btn .q-btn__content {
+        color: inherit !important;
+    }
+
+    .sim-manager-window-btn:hover {
+        background-color: rgba(198, 40, 40, 0.55) !important;
+        color: #ffffff !important;
+    }
+
+    /* Keyboard accessibility — the minimize / close buttons sit in
+       the drag area; without a visible focus ring, tabbing to them
+       would land on an invisible target. Amber matches the brand
+       accent used on the active menu item and the apply button in
+       the controller modal. */
+    .sim-manager-window-btn:focus-visible {
+        outline: 2px solid var(--hmi-accent-amber, #ffd54f) !important;
+        outline-offset: 1px !important;
+    }
+
+
+    /* ── Status-bar select popups (Scenarios) ──
+       Match the controller modal's tic-param-mode-popup palette
+       so the dropdown that opens from the Scenario field looks
+       like the dropdowns in the controller modals. */
+    .sim-manager-mode-popup {
+        background-color: #1b1b1b !important;
+        color: #ffffff !important;
+
+        border: 1px solid #303030 !important;
+        border-radius: 4px !important;
+
+        box-shadow: none !important;
+        font-family: var(--font-control-ui) !important;
+    }
+
+    .sim-manager-mode-popup .q-item {
+        min-height: 24px !important;
+        height: 24px !important;
+
+        padding: 0 8px !important;
+
+        color: #ffffff !important;
+        font-family: var(--font-control-ui) !important;
+        font-size: 0.7rem !important;
+    }
+
+    .sim-manager-mode-popup .q-item__section {
+        padding: 0 !important;
+        min-width: 0 !important;
+    }
+
+    .sim-manager-mode-popup .q-item__label {
+        color: #ffffff !important;
+        font-family: var(--font-control-ui) !important;
+        font-size: 0.7rem !important;
+        line-height: 24px !important;
+    }
+
+    .sim-manager-mode-popup .q-item:hover {
+        background-color: #2a2a2a !important;
+    }
+
+    .sim-manager-mode-popup .q-item--active {
+        background-color: #3a3000 !important;
+    }
+
+    .sim-manager-mode-popup .q-item--active .q-item__label {
+        color: #ffd54f !important;
+        font-weight: 700;
+    }
+
+
+    /* ── Responsive: narrow viewports — collapse 12-col grid to 6-col ── */
+    @media (max-width: 60rem) {
+        .sim-manager-field { grid-column: span 6 / span 6; }
+        .sim-manager-field-wide { grid-column: span 12 / span 12; }
+    }
+
+    @media (max-width: 38rem) {
+        .sim-manager-field { grid-column: span 12 / span 12; }
+    }
+
+    /* When the floating card stretches the wider 720 px layout, the
+       hero timer should keep its big digits on small viewports too
+       — just dial the font down a touch. */
+    @media (max-width: 38rem) {
+        .sim-manager-timer-value { font-size: 1.1rem; }
+        .sim-manager-timer-unit  { font-size: 0.75rem; }
+    }
+
+}

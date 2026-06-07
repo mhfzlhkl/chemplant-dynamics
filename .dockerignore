@@ -1,0 +1,66 @@
+# .dockerignore — keep the Docker build context small and
+# deterministic.
+#
+# Without this, `docker build .` would tar up the entire
+# app_root/ directory (including the multi-hundred-MB .venv
+# and the on-disk NiceGUI storage cache) every build. The
+# Dockerfile's `COPY` lines would then have to explicitly
+# skip them, which is error-prone.
+#
+# Patterns use Git's wildcards (Docker's build context builder
+# is just a tar over the working tree, so the same semantics
+# apply). One pattern per line; blank lines are ignored.
+#
+# Mirrors .gitignore but with three deliberate differences:
+#   * `!.dockerignore` itself is not in here (no point)
+#   * `!requirements.txt` is forced include (already added)
+#   * `app_root/tests/` is included — the image is a
+#     *runtime* image so we don't need the tests, but the
+#     Dockerfile explicitly `COPY`s only the directories it
+#     needs, so the test dir never makes it in regardless.
+
+# Virtualenv — heaviest single dir; never useful in an image
+.venv/
+venv/
+env/
+
+# Caches & build artefacts
+.nicegui/
+.pytest_cache/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE / editor cruft
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Git metadata
+.git/
+.gitignore
+.gitattributes
+
+# Tests — runtime image doesn't need them
+tests/
+
+# CI — workflows are useful as reference but not at runtime
+.github/
+
+# Docs — the static export lives in docs/ at build time, but
+# not in the runtime image
+docs/
+
+# Logs and runtime data
+logs/
+*.log
+
+# The Dockerfile copies only the directories it needs, but
+# .dockerignore's "deny first" semantic means we have to
+# explicitly re-allow a few files that would otherwise be
+# caught by a wider pattern (none today, but the hook is
+# here for future patterns).
+!README.md
+!requirements.txt

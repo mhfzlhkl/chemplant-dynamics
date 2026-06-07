@@ -1,0 +1,683 @@
+/* ui_root/static/css/control_panel/data_logger.css */
+
+/* =========================================================
+   DATA LOGGER SECTION
+
+   Visual language follows the PID right drawer
+   (see pid_right_drawer.css):
+
+   - card backgrounds use --bg-panel with a hair border;
+   - section titles use the uppercase control-UI font
+     (.pid-right-drawer-section-title);
+   - the title separator matches .pid-right-drawer-separator;
+   - "header row of selects" mimics a table header so each
+     scope card reads as: header → log rows.
+
+   Layout (top → bottom):
+
+       DATA LOGGER          [All outputs] [All fields] [Clear log]
+       ─────────────────────────────────────────────────────────
+       INPUTS    – manipulated values & setpoints
+       [columns ▾]
+       realtime | step | sim_min | input:FSP | …
+       <log>
+       STATES    – internal controller / plant states
+       [columns ▾]
+       <log>
+       OUTPUTS   – plant outputs (PV) and measured signals
+       [columns ▾]
+       <log>
+       INFO      – Run/Stop/Reset, mode changes, status
+       <info log>
+   ========================================================= */
+
+@layer pages {
+
+    /* When the data logger root lives inside a control-panel
+       section, tint the section's own background so any tiny
+       overflow / scroll-padding band reads as a continuation of
+       the gradient instead of a black bar above/below. The
+       :has() selector targets only sections that contain the
+       data logger, so other sections (PID, monitoring, …) are
+       unaffected. */
+    .control-panel-section:has(> .data-logger-root) {
+        background-color: var(--bg-panel-soft) !important;
+    }
+
+    .data-logger-root {
+        width: 100%;
+
+        /* Stretch top-to-bottom of the section so the gradient
+           covers the full viewport even when the log is short.
+           The parent .control-panel-section is a flex column, so
+           flex:1 1 auto + min-height:100% guarantees full-bleed
+           coverage with no surrounding --bg-main strip showing. */
+        flex: 1 1 auto;
+        min-height: 100%;
+
+        display: flex !important;
+        flex-direction: column;
+
+        /* Looser vertical rhythm between cards so the page reads
+           like a stack of separate panels rather than a dense list. */
+        gap: 1.25rem !important;
+
+        /* Roomier inner padding so cards no longer hug the section
+           edges. Top/bottom > left/right so the header and Info card
+           breathe relative to the section chrome. */
+        padding: 1.5rem 1.25rem 2rem 1.25rem;
+
+        font-family: var(--font-control-ui);
+
+        color: var(--text-main);
+
+        /* Background is flat — same flat var(--bg-panel-soft)
+           tone used by the right-drawer faceplate body and the
+           other three surfaces (controller modal, runtime
+           manager, performance monitor). The only amber wash on
+           the page lives on the scope-card headers (mirrors
+           .faceplate-header). That way all four surfaces share
+           one chrome strategy: flat body, single accent strip
+           on the header. */
+        background-color: var(--bg-panel-soft, #151c29);
+
+        /* No outer border / radius / shadow — the gradient is the
+           section background itself, not a card on top of it. */
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    /* ── Page-level title row (acts as the faceplate header
+       for the data logger page) ───────────────────────────── */
+
+    .data-logger-page-title-row {
+        width: 100%;
+
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+
+        gap: 0.75rem !important;
+
+        margin: 0 0 0.25rem 0 !important;
+        padding: 0.4rem 0.6rem !important;
+
+        background:
+            linear-gradient(180deg, rgba(255, 214, 0, 0.08), rgba(255, 214, 0, 0.0)),
+            rgba(255, 255, 255, 0.025) !important;
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        border-radius: 5px;
+    }
+
+    .data-logger-page-title {
+        /* Amber mono — matches the controller modal title, the
+           runtime manager title, and the performance monitor
+           page title so all four surfaces share the same tag
+           language. */
+        color: var(--text-highlight, #ffd600);
+
+        font-family: var(--font-mono, "Courier Prime", monospace);
+        font-size: 0.95rem;
+        font-weight: 700;
+
+        letter-spacing: 0.06em;
+        line-height: 1;
+
+        /* Soft glow lifts the title off the dark backdrop
+           — same trick the faceplate tag uses. */
+        text-shadow: 0 0 12px rgba(255, 214, 0, 0.45);
+    }
+
+    .data-logger-page-actions {
+        display: flex !important;
+        align-items: center;
+
+        gap: 0.35rem !important;
+        margin: 0 !important;
+    }
+
+    .data-logger-action-btn {
+        min-height: 26px !important;
+        height: 26px !important;
+
+        padding: 0 12px !important;
+
+        color: var(--text-main) !important;
+
+        font-family: var(--font-control-ui) !important;
+        font-size: 0.72rem !important;
+        font-weight: 700 !important;
+
+        letter-spacing: 0.04em;
+
+        background-color: rgba(255, 255, 255, 0.035) !important;
+
+        border: 1px solid rgba(255, 255, 255, 0.10) !important;
+        border-radius: 4px !important;
+    }
+
+    .data-logger-action-btn:hover {
+        color: var(--text-highlight, #ffd54f) !important;
+
+        background-color: rgba(255, 214, 0, 0.10) !important;
+        border-color: rgba(255, 214, 0, 0.45) !important;
+    }
+
+    .data-logger-action-btn-danger:hover {
+        color: var(--text-white) !important;
+
+        background-color: rgba(211, 47, 47, 0.20) !important;
+        border-color: #d32f2f !important;
+    }
+
+    /* ── Save menu / per-scope save button ──────────────── */
+
+    /* Primary "Save" button — uses the same chrome as the
+       other action buttons but flags itself with the amber
+       accent so it reads as the export action (matches the
+       faceplate Apply button family). */
+    .data-logger-save-btn {
+        color: var(--text-highlight, #ffd54f) !important;
+        border-color: rgba(255, 214, 0, 0.45) !important;
+    }
+
+    .data-logger-save-btn:hover {
+        color: var(--text-highlight, #ffd54f) !important;
+
+        background-color: rgba(255, 214, 0, 0.14) !important;
+        border-color: rgba(255, 214, 0, 0.85) !important;
+    }
+
+    .data-logger-save-btn .q-icon {
+        margin-left: 0.25rem !important;
+    }
+
+    /* Compact save icon-button on each scope card header. */
+    .data-logger-scope-save-btn {
+        color: var(--text-highlight, #ffd54f) !important;
+
+        min-width: 26px !important;
+        min-height: 26px !important;
+
+        background-color: rgba(255, 214, 0, 0.08) !important;
+
+        border: 1px solid rgba(255, 214, 0, 0.35) !important;
+        border-radius: 4px !important;
+    }
+
+    .data-logger-scope-save-btn:hover {
+        color: var(--text-white) !important;
+
+        background-color: rgba(255, 214, 0, 0.20) !important;
+        border-color: rgba(255, 214, 0, 0.75) !important;
+    }
+
+    .data-logger-scope-save-btn .q-icon {
+        font-size: 1.1rem !important;
+    }
+
+    /* Dropdown menu shown when Save is clicked. */
+    .data-logger-save-menu {
+        background-color: var(--bg-panel) !important;
+        color: var(--text-main) !important;
+
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+
+        font-family: var(--font-control-ui);
+        font-size: 0.75rem;
+
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.40);
+    }
+
+    .data-logger-save-menu .q-item {
+        min-height: 30px !important;
+        padding: 0.25rem 0.75rem !important;
+
+        color: var(--text-main) !important;
+
+        font-family: var(--font-control-ui) !important;
+        font-size: 0.72rem !important;
+        letter-spacing: 0.02em;
+    }
+
+    .data-logger-save-menu .q-item:hover,
+    .data-logger-save-menu .q-item--active {
+        background-color: rgba(255, 214, 0, 0.18) !important;
+        color: var(--text-highlight, #ffd54f) !important;
+    }
+
+    .data-logger-save-menu .q-separator {
+        background-color: var(--border-color) !important;
+        margin: 0.1rem 0;
+    }
+
+    /* Wrap the scope title + hint into a column so the save button
+       can sit beside them on the right edge of the card header. */
+    .data-logger-scope-title-group {
+        display: flex !important;
+        flex-direction: column;
+        align-items: flex-start;
+
+        gap: 0.1rem !important;
+
+        flex: 1 1 auto;
+    }
+
+    /* Re-align the existing scope-card-header to a row that puts
+       the save button on the trailing edge. */
+    .data-logger-scope-card-header {
+        align-items: center !important;
+        justify-content: space-between !important;
+    }
+
+    /* ── Shared scope card (input / state / output / info) ──*/
+
+    .data-logger-scope-card {
+        width: 100%;
+        flex: 0 0 auto;
+
+        display: flex !important;
+        flex-direction: column;
+
+        /* Wider gap so the header row, header-string preview,
+           and log widget read as separate strata. */
+        gap: 0.75rem !important;
+
+        margin: 0 !important;
+        padding: 1.1rem 1.2rem 1.25rem 1.2rem !important;
+
+        /* Flat dark panel bg — mirrors .pid-right-drawer /
+           .faceplate-root. The faceplate deliberately keeps
+           the body flat so the only color signal is the
+           header's amber wash. The scope card's own header
+           bar is what carries the amber accent. */
+        background-color: var(--bg-panel, #111722);
+
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 6px;
+
+        box-shadow:
+            0 12px 28px rgba(0, 0, 0, 0.35),
+            inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    }
+
+    .data-logger-scope-card-header {
+        width: 100%;
+
+        display: flex !important;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 0.75rem !important;
+
+        margin: 0 0 0.15rem 0 !important;
+    }
+
+    .data-logger-scope-title {
+        color: var(--text-highlight, #ffd54f);
+
+        font-family: var(--font-control-ui);
+        font-size: 0.66rem;
+        font-weight: 700;
+
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        line-height: 1;
+    }
+
+    .data-logger-scope-hint {
+        color: var(--text-muted, #bdbdbd);
+
+        font-family: var(--font-control-ui);
+        font-size: 0.62rem;
+        font-weight: 600;
+
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        line-height: 1;
+    }
+
+    /* Reuse the same separator treatment as the right drawer. */
+    .data-logger-separator {
+        background-color: var(--border-color) !important;
+        border-color: var(--border-color) !important;
+
+        opacity: 1 !important;
+    }
+
+    /* ── Header row of selects (acts like a table header) ── */
+
+    .data-logger-header-row {
+        width: 100%;
+
+        display: flex !important;
+        flex-wrap: wrap;
+        align-items: stretch;
+
+        gap: 0.4rem !important;
+
+        margin: 0 !important;
+        padding: 0.25rem 0 !important;
+
+        overflow-x: auto;
+    }
+
+    /* Container that hosts the per-signal cell grid. The grid
+       itself is rebuilt by the flush timer when the bridge swaps
+       its available_log_fields between sessions, so the container
+       must always exist (NiceGUI ``ui.element('div')``). */
+    .data-logger-header-container {
+        width: 100%;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Table-header grid — one cell per signal.
+
+       Cells flow horizontally; the row scrolls horizontally if it
+       overflows so the scope card never grows in width and the
+       overall page layout stays stable.
+
+       Reads visually like a P&ID hardware row: every column is a
+       compact, equal-width "label tile" with a clear accent when
+       active. The active accent uses --text-highlight (#ffd54f)
+       so it lines up with the faceplate amber accent used
+       everywhere else in the app (controller modal, performance
+       monitor, runtime manager). */
+    .data-logger-header-grid {
+        width: 100%;
+
+        display: flex !important;
+        flex-wrap: nowrap;
+        align-items: stretch;
+
+        gap: 0.45rem !important;
+
+        margin: 0 !important;
+        padding: 0.5rem 0 0.4rem 0 !important;
+
+        overflow-x: auto;
+    }
+
+    .data-logger-header-grid-empty {
+        flex: 1 1 100%;
+
+        padding: 0.4rem 0.6rem;
+
+        color: var(--text-muted);
+
+        font-family: var(--font-control-ui);
+        font-size: 0.72rem;
+        font-style: italic;
+
+        background-color: rgba(255, 255, 255, 0.02);
+
+        border: 1px dashed rgba(255, 255, 255, 0.08);
+        border-radius: 5px;
+    }
+
+    .data-logger-header-cell {
+        flex: 0 0 auto;
+        min-width: 110px;
+        max-width: 200px;
+
+        display: flex !important;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: center;
+
+        gap: 0.1rem;
+
+        padding: 0.4rem 0.55rem;
+
+        font-family: var(--font-control-ui);
+
+        background-color: rgba(255, 255, 255, 0.035);
+
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        border-radius: 4px;
+
+        user-select: none;
+        cursor: pointer;
+
+        transition:
+            background-color 0.12s ease,
+            border-color 0.12s ease,
+            color 0.12s ease,
+            box-shadow 0.12s ease;
+    }
+
+    .data-logger-header-cell:hover {
+        background-color: rgba(255, 214, 0, 0.06);
+        border-color: rgba(255, 214, 0, 0.35);
+    }
+
+    .data-logger-header-cell-tag {
+        color: var(--text-main);
+
+        font-family: var(--font-control-ui);
+        font-size: 0.72rem;
+        font-weight: 700;
+
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .data-logger-header-cell-meta {
+        color: var(--text-muted);
+
+        font-family: var(--font-control-ui);
+        font-size: 0.65rem;
+        font-weight: 700;
+
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+
+        white-space: nowrap;
+    }
+
+    /* Active state — column is in the bridge's selected_log_fields
+       and its values stream into the log below. */
+    .data-logger-header-cell-active {
+        background-color: rgba(255, 214, 0, 0.14);
+        border-color: var(--text-highlight, #ffd54f);
+
+        box-shadow:
+            inset 0 0 0 1px rgba(255, 214, 0, 0.25),
+            0 0 0 1px rgba(255, 214, 0, 0.10);
+    }
+
+    .data-logger-header-cell-active .data-logger-header-cell-tag {
+        color: var(--text-white);
+    }
+
+    .data-logger-header-cell-active .data-logger-header-cell-meta {
+        color: var(--text-highlight, #ffd54f);
+    }
+
+    .data-logger-header-cell-active:hover {
+        background-color: rgba(255, 214, 0, 0.22);
+        border-color: var(--text-highlight, #ffd54f);
+    }
+
+    /* Inactive state — column is hidden; click to toggle on. */
+    .data-logger-header-cell-inactive {
+        color: var(--text-muted);
+    }
+
+    /* Read-only prefix columns (realtime / step / sim_min). The
+       bridge always emits these, so the user can't toggle them. */
+    .data-logger-header-cell-readonly {
+        cursor: default;
+
+        background-color: rgba(255, 213, 79, 0.08);
+        border-color: rgba(255, 213, 79, 0.22);
+    }
+
+    .data-logger-header-cell-readonly:hover {
+        background-color: rgba(255, 213, 79, 0.12);
+        border-color: rgba(255, 213, 79, 0.32);
+    }
+
+    .data-logger-header-cell-readonly .data-logger-header-cell-tag {
+        color: var(--text-highlight);
+    }
+
+    .data-logger-header-cell-readonly .data-logger-header-cell-meta {
+        color: var(--text-muted);
+    }
+
+    /* The multi-select control itself — kept as a fallback rule
+       (still used by `data_logger_unavailable` if a future variant
+       wants a consolidated picker). */
+    .data-logger-header-select {
+        flex: 1 1 100%;
+        min-width: 220px;
+
+        background-color: rgba(255, 255, 255, 0.035);
+
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        border-radius: 5px;
+
+        padding: 0 0.35rem;
+    }
+
+    .data-logger-header-select .q-field__control,
+    .data-logger-header-select .q-field__inner {
+        min-height: 36px !important;
+    }
+
+    .data-logger-header-select .q-field__label {
+        color: var(--text-muted) !important;
+        font-family: var(--font-control-ui) !important;
+        font-size: 0.7rem !important;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    .data-logger-header-select .q-field__native,
+    .data-logger-header-select input {
+        color: var(--text-main) !important;
+        font-family: var(--font-control-ui) !important;
+        font-size: 0.75rem !important;
+    }
+
+    .data-logger-header-select .q-chip {
+        background-color: rgba(255, 214, 0, 0.14) !important;
+        color: var(--text-highlight, #ffd54f) !important;
+
+        font-family: var(--font-control-ui) !important;
+        font-size: 0.7rem !important;
+
+        border: 1px solid rgba(255, 214, 0, 0.40);
+    }
+
+    .data-logger-header-select .q-chip .q-icon {
+        color: var(--text-white) !important;
+    }
+
+    /* Popup menu shown when the user opens the select. */
+    .data-logger-select-menu {
+        background-color: var(--bg-panel) !important;
+        color: var(--text-main) !important;
+
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+
+        font-family: var(--font-control-ui);
+        font-size: 0.75rem;
+    }
+
+    .data-logger-select-menu .q-item {
+        min-height: 30px !important;
+        padding: 0.15rem 0.6rem !important;
+    }
+
+    .data-logger-select-menu .q-item__label {
+        color: var(--text-main) !important;
+        font-family: var(--font-control-ui) !important;
+        font-size: 0.72rem !important;
+    }
+
+    .data-logger-select-menu .q-item--active,
+    .data-logger-select-menu .q-item:hover {
+        background-color: rgba(255, 255, 255, 0.06) !important;
+    }
+
+    /* ── Streamed log widgets ───────────────────────────── */
+
+    .data-logger-log {
+        width: 100%;
+        min-height: 200px;
+        max-height: 300px;
+
+        margin: 0.2rem 0 0 0 !important;
+        padding: 0.6rem 0.75rem !important;
+
+        color: var(--text-main);
+
+        font-family: var(--font-mono);
+        font-size: 0.72rem;
+        line-height: 1.45;
+
+        background-color: rgba(0, 0, 0, 0.50);
+
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 5px;
+
+        /* DCS-style fixed-width output — emitted by
+           ``GenericBridge._format_log_row(dcs_style=True)`` — relies
+           on a strict monospace alignment. ``white-space: pre``
+           keeps the spaces verbatim (no collapse, no word-wrap),
+           ``overflow-x: auto`` lets wide rows scroll horizontally
+           instead of falling off the bottom, and ``letter-spacing: 0``
+           defends against any inherited tracking that would break
+           column alignment in a monospace font. */
+        white-space: pre !important;
+        overflow-x: auto !important;
+        letter-spacing: 0 !important;
+        tab-size: 4;
+    }
+
+    .data-logger-info-card {
+        /* Extra breathing room before the Info card so it visually
+           feels like a "footer" relative to the three scope cards. */
+        margin-top: 0.75rem;
+    }
+
+    .data-logger-info-log {
+        min-height: 120px;
+        max-height: 180px;
+
+        color: var(--text-soft);
+
+        /* Info card uses the same DCS-style prefix
+           ``[YYYY-MM-DD HH:MM:SS.mmm] LEVL [mode      ] message``
+           emitted from ``data_logger.py:_flush_log``. Stick with
+           the monospace font so the bracket alignment matches the
+           step rows even when the Info card is the only one
+           visible. */
+        font-family: var(--font-mono) !important;
+        white-space: pre !important;
+        overflow-x: auto !important;
+        letter-spacing: 0 !important;
+    }
+
+    /* ── Generic hint text reused by the "no engine" view ── */
+
+    .data-logger-hint {
+        color: var(--text-muted);
+
+        font-family: var(--font-control-ui);
+        font-size: 0.72rem;
+        font-weight: 500;
+    }
+}

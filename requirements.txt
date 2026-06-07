@@ -1,0 +1,8 @@
+numpy
+scipy
+control
+matplotlib
+nicegui
+pandas
+pytest
+drawsvg

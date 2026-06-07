@@ -1,0 +1,30 @@
+/* ui_root/static/css/base.css */
+
+@layer base {
+    /* =========================================================
+       BASE PAGE
+       ========================================================= */
+
+    html,
+    body {
+        min-width: var(--min-viewport-width);
+        background-color: var(--bg-main);
+        font-family: var(--font-ui);
+        margin: 0;
+        padding: 0;
+    }
+
+    /* NiceGUI root/body helper */
+    .app-body {
+        min-width: var(--min-viewport-width);
+        background-color: var(--bg-main);
+        color: var(--text-main);
+        font-family: var(--font-ui);
+    }
+
+    /* Main content placeholder */
+    .main-content {
+        background-color: var(--bg-main);
+        color: var(--text-main);
+    }
+}
