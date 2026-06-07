@@ -535,6 +535,8 @@ def main(argv: list[str] | None = None) -> int:
     recorder = StaticRecorder()
 
     # Monkey-patch ``nicegui.ui`` for the duration of the export.
+    # Ensure the module is loaded in sys.modules before we swap attributes.
+    import nicegui.ui  # noqa: F401
     real_module = sys.modules['nicegui.ui']
     saved_attrs: dict[str, Any] = {}
     for attr in dir(recorder):
