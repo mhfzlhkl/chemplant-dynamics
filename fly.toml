@@ -1,0 +1,50 @@
+app = "chemplant-dynamics"
+primary_region = "sin"
+
+[build]
+  image = "ghcr.io/mhfzlhkl/chemplant-dynamics:latest"
+
+[env]
+  NICEGUI_HOST = "0.0.0.0"
+  NICEGUI_PORT = "8080"
+  SHOW_WELCOME_MESSAGE = "false"
+  NICEGUI_LOG_LEVEL = "warning"
+
+[[services]]
+  internal_port = 8080
+  protocol = "tcp"
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80
+    force_https = true
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
+
+  [[services.http_checks]]
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "10s"
+    method = "get"
+    path = "/healthz"
+    protocol = "http"
+    tls_skip_verify = false
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [http_service.checks]
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "10s"
+    method = "GET"
+    path = "/healthz"

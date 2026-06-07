@@ -1,0 +1,56 @@
+# .github/workflows/deploy_fly.yml
+#
+# Deploy the container image to Fly.io automatically on every
+# push to main.
+#
+# Prerequisites (one-time manual setup):
+#   1. Install flyctl locally and run:
+#        fly auth signup
+#        fly launch --no-deploy
+#        fly secrets set STORAGE_SECRET=$(openssl rand -hex 32)
+#   2. Get a Fly API token:
+#        fly tokens create deploy -n "GitHub Actions"
+#   3. Add the token to GitHub repository secrets:
+#        Settings → Secrets and variables → Actions → New repository secret
+#        Name: FLY_API_TOKEN
+#
+# This workflow assumes the Docker image is already built and
+# pushed to GHCR by docker-publish.yml. It deploys that image
+# directly to Fly.io without rebuilding.
+
+name: Deploy to Fly.io
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: fly-deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  deploy:
+    name: Deploy to Fly.io
+    runs-on: ubuntu-latest
+
+    # Only deploy from the main branch, not from forks
+    if: github.event_name != 'pull_request'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy to Fly.io
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: |
+          # Deploy the latest image from GHCR
+          flyctl deploy --image "${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest" --remote-only --wait-timeout=300
